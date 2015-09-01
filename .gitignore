@@ -1,0 +1,4 @@
+/deploy
+/.vagrant
+/
+vagrant_config_dev.yaml

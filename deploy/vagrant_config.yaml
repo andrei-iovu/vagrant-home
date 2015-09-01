@@ -1,0 +1,161 @@
+# README !!!
+#
+# Create & use the `vagrant_config_dev.yaml` file for any customization. DON'T update this file
+#
+# If you want to customize one or options from a block, you must copy the entire block to `vagrant_config_dev.yaml`
+# and customize there the desired options. Otherwise, the other options (the ones you don't want to change) will
+# get a null value. Moreover, if a block inherites a reference block, then both blocks must be copied to `vagrant_config_dev.yaml`
+#
+# WARNING: changing the version value of some packages after Provision will require to destroy the host and Provision again
+# Otherwise it is possible to encounter unexpected errors on provision
+
+
+
+# Be carefull when you change settings in the following blocks:
+
+################################################################################################
+### Server configuration
+
+server_default: &server_default # Reference block
+  cpus:     	2                   # Number of Cores
+  memory:   	1024                # Allocated RAM in MB
+  swap:     	1024                # Allocate SWAP in MB. Options: false | int (MB) - Guideline: Between one or two times the memory; default: false
+  timezone: Europe/Bucharest  		# Options: http://php.net/manual/en/timezones.php; default: Europe/Bucharest
+
+server:
+  <<:       *server_default   # inherited block
+  hostname: trusty64-dev
+  
+### END Server configuration
+################################################################################################
+
+
+
+################################################################################################
+### Box Configuration
+
+box_default: &box_default           	# Reference block
+  type:           	ubuntu/trusty64   	# Options: ubuntu/trusty32 | ubuntu/trusty64; default: ubuntu/trusty64
+  name:				trusty64			# any name, as long it's relevant
+  synced_folder:	/vagrant        	# Default web server document root
+  insert_key:     	false           	# Options: true | false; default: false (meaning: allow conection through PuTTY key file)
+  gui:				false           	# Start machine with GUI for debugging. Options: true | false; default: false
+  autostart: 		true				# Options: true | false; default: true
+
+box:
+  <<:             	*box_default    # inherited block
+  ip:				192.168.1.*
+  
+### END Box Configuration
+################################################################################################
+
+
+
+################################################################################################
+### Various document roots for deploy scripts
+
+deploy_path:
+  conf:     deploy/conf     # The root to all custom configuration files to be deployed; it may overide the existing ones
+  scripts:  deploy/scripts  # The root to all scripts to run on deploy
+  helpers:  deploy/helpers  # The root to all helper scripts (like: ngxen, ngxdis etc.) to be deployed
+  vhosts:   deploy/vhost    # The root to all hosts to be deployed
+  tools:    deploy/tools    # The root to all tools (like phpMemcachedAdmin, phpinfo etc.) to be deployed
+
+### END Various document roots for deploy scripts
+################################################################################################
+
+
+
+################################################################################################
+### Languages and Packages
+
+php:
+  timezone: Europe/Bucharest  # Options: http://php.net/manual/en/timezones.php; default: php default
+  version:  5.5               # Options: 5.5 | 5.6; default: 5.5. WARNING: changing the version value after Provision will require to destroy the host and Provision again
+
+nodejs:
+  install:  false   # Install NodeJs. Options: true | false; default: false
+  version:  latest  # Options: latest (meaning: the latest stable version)
+  packages: false   # List any global NodeJS packages that you want to install. Options: false | array. WARNING: Remove `false` when you add packages or Provision will fail
+    #- grunt-cli
+    #- gulp
+    #- bower
+    #- yo
+    #- less
+
+### END Languages and Packages
+################################################################################################
+
+
+
+################################################################################################
+### Database Configuration
+
+# This block can be inherited by DB like MySQL, MariaDB etc. Tools like PhpMyAdmin would use this for configuration
+db_generic: &db_generic # Reference block
+  user:           root  # Always is root; used just for reference
+  password:       root  # Default: root
+  enable_remote:  true  # Options: true | false; default: false
+
+# NOTE: if both MySQl and MariaDB are selected  to install, only MariaDB will be installed
+mysql:
+  install:        false       	# Install MySQL. Options: true | false; default: false
+  version:        5.5         	# Options: 5.5 | 5.6. WARNING: changing the version value after Provision will require to destroy the host and Provision again
+  <<:             *db_generic 	# inherited block
+
+mariadb:
+  install:        false       	# Install MariaDB. Options: true | false; default: false
+  version:        10.0        	# Options: 10.0
+  <<:             *db_generic 	# inherited block
+
+mongo:
+  install:        true  # Install Mongo. Options: true | false; default: false
+  enable_remote:  true  # Options: true | false; default: false
+  version:        2     # Install the latest version for the choosen branch. Options: 2, 3; default: 2. WARNING: changing the version value after Provision will require to destroy the host and Provision again
+
+### END Database Configuration
+################################################################################################
+
+
+
+################################################################################################
+### In-Memory Stores
+
+redis:
+  install:    false  # Install Redis. Options: true | false; default: false
+  persistent: false  # Add journaling and persistence. Options: true | false; default: false
+
+### END In-Memory Stores
+################################################################################################
+
+
+
+################################################################################################
+### Utility (queue)
+
+beanstalkd:
+  install:    	false  # Install Beanstalkd. Options: true | false; default: false
+  
+rabbitmq:
+  install:    	false  # Install RabbitMQ. Options: true | false; default: false
+  user:			user
+  password:		password
+
+### END Utility (queue)
+################################################################################################
+
+
+
+################################################################################################
+### Tools
+
+composer:
+  install:  true  # Install Composer. Options: true | false; default: true
+  packages: false # List any global Composer packages that you want to install. Options: false | array. WARNING: Remove `false` when you add packages or Provision will fail
+    #- phpunit/phpunit:4.*
+    #- codeception/codeception:2.*
+    #- phpspec/phpspec:2.*
+    #- squizlabs/php_codesniffer:2.*
+
+### END Tools
+################################################################################################

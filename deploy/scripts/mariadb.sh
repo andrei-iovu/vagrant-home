@@ -11,7 +11,7 @@ if [[ -z $MARIADB_PASSWORD ]]; then
 fi
 
 MARIADB_ENABLE_REMOTE=$3
-if [[ -z $MARIADB_ENABLE_REMOTE || ! MARIADB_ENABLE_REMOTE =~ true ]]; then
+if [[ -z $MARIADB_ENABLE_REMOTE || ! $MARIADB_ENABLE_REMOTE =~ true ]]; then
     MARIADB_ENABLE_REMOTE=false
 fi
 
@@ -40,6 +40,11 @@ sudo apt-get install -qq mariadb-server
 
 # Make Maria connectable from outside world without SSH tunnel
 if [[ $MARIADB_ENABLE_REMOTE =~ true ]]; then
+	echo
+    echo "###########################################################"
+    echo
+    echo ">>> Enabling Remote Access"
+	
     # enable remote access
     # setting the mysql bind-address to allow connections from everywhere
     sed -i "s/bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/my.cnf

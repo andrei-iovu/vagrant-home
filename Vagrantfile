@@ -342,8 +342,21 @@ Vagrant.configure(2) do |config|
 
     # optimize base box
     db.vm.provision "shell", path: "#{CONF['deploy_path']['scripts']}/base_box_optimizations.sh", privileged: true
+	
+	# Provision PHP
+    db.vm.provision "shell", path: "#{CONF['deploy_path']['scripts']}/php.sh", args: ["#{CONF['php']['timezone']}", "#{CONF['php']['version']}"]
 
     ### END Base Items
+    ################################################################################################
+
+
+    ################################################################################################
+    ### Web Servers
+
+    # Provision Nginx Base
+    db.vm.provision "shell", path: "#{CONF['deploy_path']['scripts']}/nginx.sh", args: [CONF['box_db']['synced_folder'], CONF['deploy_path']['helpers'], CONF['deploy_path']['conf']]
+
+    ### END Web Servers
     ################################################################################################
 
 
@@ -361,6 +374,26 @@ Vagrant.configure(2) do |config|
     end
 
     ### END Databases
+    ################################################################################################
+	
+	
+	################################################################################################
+    ### Tools
+
+    # Provision Composer
+    if CONF['composer']['install'] == true
+      db.vm.provision "shell", path: "#{CONF['deploy_path']['scripts']}/composer.sh", privileged: false, args: CONF['composer']['packages'].join(" ")
+    end
+
+    # Provision PhpMyAdmin
+    if CONF['mysql']['install'] == true || CONF['mariadb']['install'] == true
+      db.vm.provision "shell", path: "#{CONF['deploy_path']['scripts']}/phpmyadmin.sh", args: ["#{CONF['db_generic']['password']}", CONF['box_db']['synced_folder'], CONF['deploy_path']['conf']]
+    end
+
+    # Provision PHP tools
+    db.vm.provision "shell", path: "#{CONF['deploy_path']['scripts']}/php_tools.sh", args: [CONF['box_db']['synced_folder'], CONF['deploy_path']['tools'], CONF['deploy_path']['conf']]
+
+    ### END Tools
     ################################################################################################
 	
 	db.vm.provision "shell", path: "#{CONF['deploy_path']['scripts']}/status_servicii.sh", privileged: false, args: [CONF['box_db']['synced_folder'], CONF['deploy_path']['scripts']]

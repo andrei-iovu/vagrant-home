@@ -1,4 +1,3 @@
-/deploy
+/.idea
 /.vagrant
-/
-vagrant_config_dev.yaml
+/deploy/vagrant_config_dev.yaml

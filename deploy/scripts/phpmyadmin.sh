@@ -34,7 +34,8 @@ if [[ $NGINX_IS_INSTALLED -eq 0 && ! -L /usr/share/nginx/html/phpmyadmin ]]; the
 fi
 
 # Replace the config file
-cp $SYNCED_FOLDER/$CONF_ROOT_PATH/phpmyadmin/config.inc.php /usr/share/phpmyadmin/
+#cp $SYNCED_FOLDER/$CONF_ROOT_PATH/phpmyadmin/config.inc.php /usr/share/phpmyadmin/
+cp $SYNCED_FOLDER/$CONF_ROOT_PATH/phpmyadmin/config.inc.php /var/lib/phpmyadmin/
 
 echo
 echo "Access:"

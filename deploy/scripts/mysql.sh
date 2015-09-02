@@ -44,7 +44,12 @@ sudo apt-get install -qq $mysql_package
 
 # Make MySQL connectable from outside world without SSH tunnel
 if [[ $MYSQL_ENABLE_REMOTE =~ true ]]; then
-    # enable remote access
+    echo
+    echo "###########################################################"
+    echo
+    echo ">>> Enabling Remote Access"
+	
+	# enable remote access
     # setting the mysql bind-address to allow connections from everywhere
     sed -i "s/bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
 

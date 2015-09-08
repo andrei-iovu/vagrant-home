@@ -297,6 +297,8 @@ Vagrant.configure(2) do |config|
     ### END Tools
     ################################################################################################
 
+    web.vm.provision "shell", path: "#{CONF['deploy_path']['scripts']}/lossless_images.sh"    
+    web.vm.provision "shell", path: "#{CONF['deploy_path']['scripts']}/vhosts.sh", args: [CONF['box']['synced_folder'], CONF['deploy_path']['vhosts']]
     web.vm.provision "shell", path: "#{CONF['deploy_path']['scripts']}/status_servicii.sh", privileged: false, args: [CONF['box']['synced_folder'], CONF['deploy_path']['scripts']]
   end
 

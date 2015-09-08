@@ -16,14 +16,11 @@
 ################################################################################################
 ### Server configuration
 
-server_default: &server_default # Reference block
-  cpus:     	2                   # Number of Cores
-  memory:   	1024                # Allocated RAM in MB
-  swap:     	1024                # Allocate SWAP in MB. Options: false | int (MB) - Guideline: Between one or two times the memory; default: false
-  timezone: Europe/Bucharest  		# Options: http://php.net/manual/en/timezones.php; default: Europe/Bucharest
-
 server:
-  <<:       *server_default   # inherited block
+  cpus:     2                 # Number of Cores
+  memory:   1024              # Allocated RAM in MB
+  swap:     1024              # Allocate SWAP in MB. Options: false | int (MB) - Guideline: Between one or two times the memory; default: false
+  timezone: Europe/Bucharest  # Options: http://php.net/manual/en/timezones.php; default: Europe/Bucharest
   hostname: trusty64-dev
   
 ### END Server configuration
@@ -34,17 +31,14 @@ server:
 ################################################################################################
 ### Box Configuration
 
-box_default: &box_default           	# Reference block
-  type:           	ubuntu/trusty64   	# Options: ubuntu/trusty32 | ubuntu/trusty64; default: ubuntu/trusty64
-  name:				trusty64			# any name, as long it's relevant
-  synced_folder:	/vagrant        	# Default web server document root
-  insert_key:     	false           	# Options: true | false; default: false (meaning: allow conection through PuTTY key file)
-  gui:				false           	# Start machine with GUI for debugging. Options: true | false; default: false
-  autostart: 		true				# Options: true | false; default: true
-
 box:
-  <<:             	*box_default    # inherited block
-  ip:				192.168.1.*
+  type:           ubuntu/trusty64 # Options: ubuntu/trusty32 | ubuntu/trusty64; default: ubuntu/trusty64
+  name:           trusty64        # any name, as long it's relevant
+  synced_folder:  /vagrant        # Default web server document root
+  insert_key:     false           # Options: true | false; default: false (meaning: allow conection through PuTTY key file)
+  gui:            false           # Start machine with GUI for debugging. Options: true | false; default: false
+  autostart:      true            # Options: true | false; default: true
+  ip:             192.168.1.*
   
 ### END Box Configuration
 ################################################################################################
@@ -92,21 +86,20 @@ nodejs:
 ### Database Configuration
 
 # This block can be inherited by DB like MySQL, MariaDB etc. Tools like PhpMyAdmin would use this for configuration
-db_generic: &db_generic # Reference block
+mysql_root:
   user:           root  # Always is root; used just for reference
   password:       root  # Default: root
-  enable_remote:  true  # Options: true | false; default: false
 
 # NOTE: if both MySQl and MariaDB are selected  to install, only MariaDB will be installed
 mysql:
-  install:        false       	# Install MySQL. Options: true | false; default: false
-  version:        5.5         	# Options: 5.5 | 5.6. WARNING: changing the version value after Provision will require to destroy the host and Provision again
-  <<:             *db_generic 	# inherited block
+  install:        false # Install MySQL. Options: true | false; default: false
+  enable_remote:  true  # Options: true | false; default: false
+  version:        5.5   # Options: 5.5 | 5.6. WARNING: changing the version value
 
 mariadb:
-  install:        false       	# Install MariaDB. Options: true | false; default: false
-  version:        10.0        	# Options: 10.0
-  <<:             *db_generic 	# inherited block
+  install:        false # Install MariaDB. Options: true | false; default: false
+  enable_remote:  true  # Options: true | false; default: false
+  version:        10.0  # Options: 10.0
 
 mongo:
   install:        true  # Install Mongo. Options: true | false; default: false
@@ -134,12 +127,12 @@ redis:
 ### Utility (queue)
 
 beanstalkd:
-  install:    	false  # Install Beanstalkd. Options: true | false; default: false
+  install:  false  # Install Beanstalkd. Options: true | false; default: false
   
 rabbitmq:
-  install:    	false  # Install RabbitMQ. Options: true | false; default: false
-  user:			user
-  password:		password
+  install:  false  # Install RabbitMQ. Options: true | false; default: false
+  user:     user
+  password: password
 
 ### END Utility (queue)
 ################################################################################################

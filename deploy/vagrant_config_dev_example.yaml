@@ -1,29 +1,11 @@
 ################################################################################################
 ### Server configuration
 
-server_default: &server_default # Reference block
-  cpus:     	2                   # Number of Cores
-  memory:   	1024                # Allocated RAM in MB
-  swap:     	1024                # Allocate SWAP in MB. Options: false | int (MB) - Guideline: Between one or two times the memory; default: false
-  timezone: Europe/Bucharest  		# Options: http://php.net/manual/en/timezones.php; default: Europe/Bucharest
-
 server_web:
-  <<:       *server_default   # inherited block
-  hostname: trusty64-web
+  hostname: trusty64-dev
 
 server_db:
-  <<:       *server_default   # inherited block
   hostname: trusty64-db
-  cpus:     1
-  memory:   512
-  swap:     512
-
-server_static:
-  <<:       *server_default   # inherited block
-  hostname: trusty64-static
-  cpus:     1
-  memory:   512
-  swap:     512
   
 ### END Server configuration
 ################################################################################################
@@ -32,29 +14,16 @@ server_static:
 
 ################################################################################################
 ### Box Configuration
-
-box_default: &box_default           	# Reference block
-  type:           	ubuntu/trusty64   	# Options: ubuntu/trusty32 | ubuntu/trusty64; default: ubuntu/trusty64
-  name:				trusty64			# any name, as long it's relevant
-  synced_folder:	/vagrant        	# Default web server document root
-  insert_key:     	false           	# Options: true | false; default: false (meaning: allow conection through PuTTY key file)
-  gui:				false           	# Start machine with GUI for debugging. Options: true | false; default: false
-  autostart: 		true				# Options: true | false; default: true
   
 box_web:
-  <<:             	*box_default      # inherited block
-  ip:             	192.168.1.150
-  name:				trusty64-web
+  name:       trusty64-web
+  autostart:  true
+  ip:         192.168.1.150
   
 box_db:
-  <<:             	*box_default      # inherited block
-  ip:             	192.168.1.151
-  name:				trusty64-db
-  
-box_static:
-  <<:             	*box_default      # inherited block
-  ip:             	192.168.1.152
-  name:				trusty64-static
+  name:       trusty64-db
+  autostart:  true
+  ip:         192.168.1.151
   
 ### END Box Configuration
 ################################################################################################
@@ -66,7 +35,6 @@ box_static:
 
 nodejs:
   install:  true
-  version:  latest
   packages:    
     - grunt-cli
     - gulp
@@ -80,18 +48,8 @@ nodejs:
 ################################################################################################
 ### Database Configuration
 
-# This block can be inherited by DB like MySQL, MariaDB etc. Tools like PhpMyAdmin would use this for configuration
-db_generic: &db_generic # Reference block
-  user:           root  # Always is root; used just for reference
-  password:       root  # Default: root
-  enable_remote:  true  # Options: true | false; default: false
-
-# NOTE: if both MySQl and MariaDB are selected  to install, only MariaDB will be installed
-
 mariadb:
-  install:        true       	# Install MariaDB. Options: true | false; default: false
-  version:        10.0        	# Options: 10.0
-  <<:             *db_generic 	# inherited block
+  install:  true
 
 ### END Database Configuration
 ################################################################################################

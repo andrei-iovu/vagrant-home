@@ -1,0 +1,61 @@
+server {
+    listen 80;
+    
+    # Host that will serve this project.
+    server_name www.base-laravel.dev;
+    
+    # The location of our projects public directory.
+    root /vagrant/www/base-laravel/public/;
+    
+    # Useful logs for debug.
+    access_log /var/log/nginx/base-laravel-access.log;
+    error_log /var/log/nginx/base-laravel-error.log;
+    rewrite_log on;
+    
+    # Specify a character set
+    charset UTF-8;
+    
+    # Added cache headers for media files
+    location ~* \.(ico|png|jpe?g|JPG|gif|swf|svg|woff)$ {
+        expires 30d;
+        log_not_found off;
+    }
+
+    # Added cache headers for commonly updated files
+    location ~* \.(xml|txt|html|js|css)$ {
+        expires 2h;
+        log_not_found off;
+    }
+    
+    # Remove trailing slash to please routing system.
+    if (!-d $request_filename) {
+        rewrite ^/(.+)/$ /$1 permanent;
+    }
+
+    location / {
+        # Point index to the front controller.
+        index index.php index.html index.htm;
+        
+        # URLs to attempt, including pretty ones
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+    
+    # Don't log robots.txt or favicon.ico files
+    location = /favicon.ico { log_not_found off; access_log off; }
+    location = /robots.txt  { log_not_found off; access_log off; }
+        
+    location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        
+        # Parameters
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+    
+    # Deny access to .htaccess files
+    location ~* (\.ht)$ {
+        deny all;
+    }
+}

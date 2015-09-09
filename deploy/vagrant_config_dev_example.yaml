@@ -2,7 +2,7 @@
 ### Server configuration
 
 server_web:
-  hostname: trusty64-dev
+  hostname: trusty64-web
 
 server_db:
   hostname: trusty64-db

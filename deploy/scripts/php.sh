@@ -98,13 +98,15 @@ EOF
 cat > $(find /etc/php5 -name xdebug.ini) << EOF
 zend_extension=$(find /usr/lib/php5 -name xdebug.so)
 xdebug.remote_enable=1
-xdebug.remote_connect_back=1
+xdebug.remote_autostart=0
+xdebug.remote_connect_back=0
 xdebug.remote_port=9000
 xdebug.remote_handler="dbgp"
 xdebug.scream=0
 xdebug.cli_color=1
 xdebug.show_local_vars=0
 xdebug.show_exception_trace=0
+xdebug.remote_host=10.0.2.2
 
 ; var_dump display
 xdebug.var_display_max_depth=20

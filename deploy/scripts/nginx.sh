@@ -35,6 +35,13 @@ dos2unix /etc/nginx/nginx.conf
 cp $SYNCED_FOLDER/$CONF_ROOT_PATH/nginx/default /etc/nginx/sites-available/default
 dos2unix /etc/nginx/sites-available/default
 
+# Template files for virtual hosts from backup
+cp $SYNCED_FOLDER/$CONF_ROOT_PATH/nginx/snippets/* /etc/nginx/snippets
+dos2unix /etc/nginx/snippets/*
+
+# Update log rotation script
+sed -i -e 's/weekly/daily/' /etc/logrotate.d/nginx
+
 # Turn off sendfile to be more compatible with Windows, which can't use NFS
 sed -i 's/sendfile on;/sendfile off;/' /etc/nginx/nginx.conf
 

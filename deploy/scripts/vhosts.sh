@@ -8,6 +8,7 @@ echo ">>> Installing vhots"
 synced_folder_temp="$1"
 vhosts_root_path_temp="$2"
 
+# Virtual hosts from backup
 cp $synced_folder_temp/$vhosts_root_path_temp/nginx/* /etc/nginx/sites-available/
 dos2unix /etc/nginx/sites-available/*
 

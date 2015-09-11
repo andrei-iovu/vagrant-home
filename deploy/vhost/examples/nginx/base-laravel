@@ -53,6 +53,10 @@ server {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     }
+	
+	# Auto-generated Metas
+	#rewrite ^/robots\.txt$ /index.php?robots=1 last;
+	rewrite ^/sitemap\.xml$ /index.php?xml_sitemap=index last;
     
     # Deny access to .htaccess files
     location ~* (\.ht)$ {
